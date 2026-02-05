@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Plus, Settings, TrendingDown, TrendingUp } from 'lucide-react'
+import { Plus, Settings, TrendingDown, TrendingUp, Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -15,6 +16,7 @@ import { MonthSelector } from './month-selector'
 import { SummaryCard } from './summary-card'
 import { GroupCard } from './group-card'
 import { SettingsModal } from './settings-modal'
+import { QuickAddModal } from './quick-add-modal'
 import { financeStore, useFinanceStore } from '@/lib/finance-store'
 
 export function FinanceDashboard() {
@@ -23,9 +25,9 @@ export function FinanceDashboard() {
   const [month, setMonth] = useState(now.getMonth() + 1)
   const [showSettings, setShowSettings] = useState(false)
   const [newGroupName, setNewGroupName] = useState('')
-  const [newGroupType, setNewGroupType] = useState<'expense' | 'income' | null>(
-    null
-  )
+  const [newGroupType, setNewGroupType] = useState<'expense' | 'income' | null>(null)
+  const [quickAddType, setQuickAddType] = useState<'expense' | 'income' | null>(null)
+  const { theme, setTheme } = useTheme()
 
   const {
     categories,
@@ -54,13 +56,13 @@ export function FinanceDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-24 md:pb-6">
       <header className="sticky top-0 z-20 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-primary p-2">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 md:px-4 md:py-4">
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className="rounded-lg bg-primary p-1.5 md:p-2">
               <svg
-                className="h-6 w-6 text-primary-foreground"
+                className="h-5 w-5 md:h-6 md:w-6 text-primary-foreground"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -73,12 +75,12 @@ export function FinanceDashboard() {
                 />
               </svg>
             </div>
-            <h1 className="text-xl font-bold text-foreground">
-              Controle Financeiro
+            <h1 className="text-base md:text-xl font-bold text-foreground">
+              Financeiro
             </h1>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 md:gap-3">
             <MonthSelector
               year={year}
               month={month}
@@ -90,7 +92,18 @@ export function FinanceDashboard() {
             <Button
               variant="outline"
               size="icon"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="h-8 w-8 md:h-9 md:w-9"
+            >
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Alternar tema</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
               onClick={() => setShowSettings(true)}
+              className="h-8 w-8 md:h-9 md:w-9"
             >
               <Settings className="h-4 w-4" />
               <span className="sr-only">Configuracoes</span>
@@ -99,7 +112,45 @@ export function FinanceDashboard() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl space-y-8 px-4 py-6">
+      {/* Floating Action Buttons - Mobile */}
+      <div className="fixed bottom-4 left-0 right-0 z-30 flex justify-center gap-3 px-4 md:hidden">
+        <Button
+          onClick={() => setQuickAddType('expense')}
+          className="flex-1 max-w-[160px] gap-2 bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90"
+          size="lg"
+        >
+          <TrendingDown className="h-5 w-5" />
+          A Pagar
+        </Button>
+        <Button
+          onClick={() => setQuickAddType('income')}
+          className="flex-1 max-w-[160px] gap-2 bg-primary text-primary-foreground shadow-lg hover:bg-primary/90"
+          size="lg"
+        >
+          <TrendingUp className="h-5 w-5" />
+          A Receber
+        </Button>
+      </div>
+
+      <main className="mx-auto max-w-7xl space-y-6 px-3 py-4 md:space-y-8 md:px-4 md:py-6">
+        {/* Desktop Quick Add Buttons */}
+        <div className="hidden md:flex gap-3 justify-end">
+          <Button
+            onClick={() => setQuickAddType('expense')}
+            className="gap-2 bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            <TrendingDown className="h-4 w-4" />
+            Lancar Despesa
+          </Button>
+          <Button
+            onClick={() => setQuickAddType('income')}
+            className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            <TrendingUp className="h-4 w-4" />
+            Lancar Recebimento
+          </Button>
+        </div>
+
         <SummaryCard
           totalExpenses={totals.totalExpenses}
           totalIncome={totals.totalIncome}
@@ -310,6 +361,31 @@ export function FinanceDashboard() {
       </Dialog>
 
       <SettingsModal open={showSettings} onOpenChange={setShowSettings} />
+
+      {quickAddType && (
+        <QuickAddModal
+          open={quickAddType !== null}
+          onOpenChange={(open) => !open && setQuickAddType(null)}
+          type={quickAddType}
+          categories={categories}
+          bankAccounts={bankAccounts}
+          groups={quickAddType === 'expense' ? monthData.expenseGroups : monthData.incomeGroups}
+          onAddTransaction={(groupId, data) => {
+            if (quickAddType === 'expense') {
+              financeStore.addExpenseTransaction(monthKey, groupId, data)
+            } else {
+              financeStore.addIncomeTransaction(monthKey, groupId, data)
+            }
+          }}
+          onAddGroup={(name) => {
+            if (quickAddType === 'expense') {
+              financeStore.addExpenseGroup(monthKey, name)
+            } else {
+              financeStore.addIncomeGroup(monthKey, name)
+            }
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -74,18 +74,18 @@ export function GroupCard({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+    <div className="overflow-hidden rounded-lg md:rounded-xl border border-border bg-card shadow-sm">
       <div
-        className={`flex items-center justify-between gap-4 p-4 ${
+        className={`flex items-center justify-between gap-2 md:gap-4 p-3 md:p-4 ${
           type === 'expense' ? 'bg-destructive/5' : 'bg-primary/5'
         }`}
       >
-        <div className="flex flex-1 items-center gap-3">
+        <div className="flex flex-1 items-center gap-2 md:gap-3 min-w-0">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="h-8 w-8 shrink-0"
+            className="h-7 w-7 md:h-8 md:w-8 shrink-0"
           >
             {isExpanded ? (
               <ChevronDown className="h-4 w-4" />
@@ -95,11 +95,11 @@ export function GroupCard({
           </Button>
 
           {isEditing ? (
-            <div className="flex flex-1 items-center gap-2">
+            <div className="flex flex-1 items-center gap-1.5 md:gap-2 min-w-0">
               <Input
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
-                className="h-8 max-w-[200px]"
+                className="h-7 md:h-8 flex-1 min-w-0"
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleSaveName()
@@ -110,7 +110,7 @@ export function GroupCard({
                 variant="ghost"
                 size="icon"
                 onClick={handleSaveName}
-                className="h-8 w-8"
+                className="h-7 w-7 md:h-8 md:w-8 shrink-0"
               >
                 <Check className="h-4 w-4" />
               </Button>
@@ -118,49 +118,71 @@ export function GroupCard({
                 variant="ghost"
                 size="icon"
                 onClick={handleCancelEdit}
-                className="h-8 w-8"
+                className="h-7 w-7 md:h-8 md:w-8 shrink-0"
               >
                 <X className="h-4 w-4" />
               </Button>
             </div>
           ) : (
-            <h3 className="flex-1 font-semibold text-foreground">{name}</h3>
+            <h3 className="flex-1 text-sm md:text-base font-semibold text-foreground truncate">{name}</h3>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 md:gap-2 shrink-0">
           <span
-            className={`text-lg font-bold ${
+            className={`text-sm md:text-lg font-bold ${
               type === 'expense' ? 'text-destructive' : 'text-primary'
             }`}
           >
             {formatCurrency(total)}
           </span>
           {!isEditing && (
-            <>
+            <div className="hidden sm:flex items-center gap-1">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsEditing(true)}
-                className="h-8 w-8"
+                className="h-7 w-7 md:h-8 md:w-8"
               >
-                <Pencil className="h-4 w-4" />
+                <Pencil className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={onDelete}
-                className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                className="h-7 w-7 md:h-8 md:w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
               </Button>
-            </>
+            </div>
           )}
         </div>
       </div>
 
       {isExpanded && (
-        <div className="space-y-3 p-4">
+        <div className="space-y-2 md:space-y-3 p-3 md:p-4">
+          {/* Mobile actions for group */}
+          <div className="flex sm:hidden justify-end gap-1 -mt-1 mb-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsEditing(true)}
+              className="h-7 text-xs"
+            >
+              <Pencil className="h-3 w-3 mr-1" />
+              Editar
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onDelete}
+              className="h-7 text-xs text-destructive hover:bg-destructive/10"
+            >
+              <Trash2 className="h-3 w-3 mr-1" />
+              Excluir
+            </Button>
+          </div>
+
           {transactions.map((transaction) =>
             editingTransaction?.id === transaction.id ? (
               <TransactionForm
@@ -202,10 +224,10 @@ export function GroupCard({
           ) : (
             <Button
               variant="outline"
-              className="w-full border-dashed bg-transparent"
+              className="w-full border-dashed bg-transparent text-xs md:text-sm h-9 md:h-10"
               onClick={() => setShowForm(true)}
             >
-              <Plus className="mr-2 h-4 w-4" />
+              <Plus className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4" />
               Adicionar {type === 'expense' ? 'Despesa' : 'Recebimento'}
             </Button>
           )}

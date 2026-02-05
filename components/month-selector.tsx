@@ -18,6 +18,21 @@ const MONTH_NAMES = [
   'Dezembro',
 ]
 
+const MONTH_NAMES_SHORT = [
+  'Jan',
+  'Fev',
+  'Mar',
+  'Abr',
+  'Mai',
+  'Jun',
+  'Jul',
+  'Ago',
+  'Set',
+  'Out',
+  'Nov',
+  'Dez',
+]
+
 interface MonthSelectorProps {
   year: number
   month: number
@@ -42,27 +57,28 @@ export function MonthSelector({ year, month, onChange }: MonthSelectorProps) {
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-2 py-1.5 shadow-sm">
+    <div className="flex items-center gap-1 md:gap-3 rounded-lg border border-border bg-card px-1.5 md:px-2 py-1 md:py-1.5 shadow-sm">
       <Button
         variant="ghost"
         size="icon"
         onClick={handlePrevious}
-        className="h-8 w-8"
+        className="h-7 w-7 md:h-8 md:w-8"
       >
         <ChevronLeft className="h-4 w-4" />
         <span className="sr-only">Mes anterior</span>
       </Button>
-      <div className="flex min-w-[160px] items-center justify-center gap-2">
-        <Calendar className="h-4 w-4 text-muted-foreground" />
-        <span className="font-medium">
-          {MONTH_NAMES[month - 1]} {year}
+      <div className="flex min-w-[90px] md:min-w-[160px] items-center justify-center gap-1.5 md:gap-2">
+        <Calendar className="h-3.5 w-3.5 md:h-4 md:w-4 text-muted-foreground hidden md:block" />
+        <span className="text-sm md:text-base font-medium">
+          <span className="md:hidden">{MONTH_NAMES_SHORT[month - 1]} {year}</span>
+          <span className="hidden md:inline">{MONTH_NAMES[month - 1]} {year}</span>
         </span>
       </div>
       <Button
         variant="ghost"
         size="icon"
         onClick={handleNext}
-        className="h-8 w-8"
+        className="h-7 w-7 md:h-8 md:w-8"
       >
         <ChevronRight className="h-4 w-4" />
         <span className="sr-only">Proximo mes</span>

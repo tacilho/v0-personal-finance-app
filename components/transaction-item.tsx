@@ -39,12 +39,12 @@ export function TransactionItem({
   )
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-border bg-background p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between">
-      <div className="flex-1 space-y-1">
+    <div className="flex flex-col gap-2 md:gap-3 rounded-lg border border-border bg-background p-3 md:p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex-1 space-y-1 min-w-0">
         <div className="flex items-start justify-between gap-2 sm:justify-start">
-          <h4 className="font-medium text-foreground">{transaction.name}</h4>
+          <h4 className="text-sm md:text-base font-medium text-foreground truncate">{transaction.name}</h4>
           <span
-            className={`text-lg font-semibold sm:hidden ${
+            className={`text-sm md:text-lg font-semibold sm:hidden shrink-0 ${
               type === 'expense' ? 'text-destructive' : 'text-primary'
             }`}
           >
@@ -52,17 +52,17 @@ export function TransactionItem({
             {formatCurrency(transaction.value)}
           </span>
         </div>
-        <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+        <div className="flex flex-wrap gap-2 md:gap-3 text-xs md:text-sm text-muted-foreground">
           {category && (
             <span className="flex items-center gap-1">
               <Tag className="h-3 w-3" />
-              {category.name}
+              <span className="truncate max-w-[80px] md:max-w-none">{category.name}</span>
             </span>
           )}
           {bankAccount && (
             <span className="flex items-center gap-1">
               <CreditCard className="h-3 w-3" />
-              {bankAccount.name}
+              <span className="truncate max-w-[80px] md:max-w-none">{bankAccount.name}</span>
             </span>
           )}
           {transaction.paymentDate && (
@@ -73,15 +73,15 @@ export function TransactionItem({
           )}
         </div>
         {transaction.notes && (
-          <p className="text-sm text-muted-foreground italic">
+          <p className="text-xs md:text-sm text-muted-foreground italic line-clamp-2">
             {transaction.notes}
           </p>
         )}
       </div>
 
-      <div className="flex items-center justify-between gap-4 sm:justify-end">
+      <div className="flex items-center justify-between gap-2 md:gap-4 sm:justify-end">
         <span
-          className={`hidden text-lg font-semibold sm:block ${
+          className={`hidden text-base md:text-lg font-semibold sm:block ${
             type === 'expense' ? 'text-destructive' : 'text-primary'
           }`}
         >
@@ -93,18 +93,18 @@ export function TransactionItem({
             variant="ghost"
             size="icon"
             onClick={onEdit}
-            className="h-8 w-8"
+            className="h-7 w-7 md:h-8 md:w-8"
           >
-            <Pencil className="h-4 w-4" />
+            <Pencil className="h-3.5 w-3.5 md:h-4 md:w-4" />
             <span className="sr-only">Editar</span>
           </Button>
           <Button
             variant="ghost"
             size="icon"
             onClick={onDelete}
-            className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            className="h-7 w-7 md:h-8 md:w-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
             <span className="sr-only">Excluir</span>
           </Button>
         </div>
