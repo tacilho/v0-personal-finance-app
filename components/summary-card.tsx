@@ -1,5 +1,3 @@
-'use client'
-
 import { TrendingDown, TrendingUp, Wallet, PiggyBank } from 'lucide-react'
 
 interface SummaryCardProps {
